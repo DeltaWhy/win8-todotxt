@@ -19,6 +19,7 @@ namespace TodoTxt
         public DateTime DueDate { get; set; }
         public List<string> Projects { get; set; }
         public List<string> Contexts { get; set; }
+        public Dictionary<string, string> Meta { get; set; }
 
         public Todo(string line)
         {
@@ -32,17 +33,25 @@ namespace TodoTxt
             try
             {
                 this.CompletedDate = DateTime.Parse(match.Groups["completedate"].Value);
-            }
-            catch (FormatException e)
-            {
-            }
+            } catch (FormatException e) { }
             try
             {
                 this.CreatedDate = DateTime.Parse(match.Groups["createdate"].Value);
+            } catch (FormatException e) { }
+
+            this.Projects = (from Match m in Regex.Matches(this.Text, @"\+(\S+)") select m.Groups[1].Value).ToList();
+            this.Contexts = (from Match m in Regex.Matches(this.Text, @"@(\S+)") select m.Groups[1].Value).ToList();
+            this.Meta = new Dictionary<string,string>();
+            foreach (Match m in Regex.Matches(this.Text, @"([^\s:]+):([^\s:]+)")) {
+                this.Meta[m.Groups[1].Value.ToLower()] = m.Groups[2].Value;
             }
-            catch (FormatException e)
+
+            try
             {
+                this.DueDate = DateTime.Parse(this.Meta["due"]);
             }
+            catch (FormatException e) { }
+            catch (KeyNotFoundException e) { }
         }
 
         public Style TextStyle
@@ -54,8 +63,11 @@ namespace TodoTxt
         }
         public override string ToString()
         {
-            //TODO - detailed stringify
-            return Text;
+            return (this.Completed ? "x " : "") +
+                (this.CompletedDate != DateTime.MinValue ? this.CompletedDate.ToString("yyyy-MM-dd ") : "") +
+                (this.Priority != null && this.Priority != "" ? "(" + this.Priority + ") " : "") +
+                (this.CreatedDate != DateTime.MinValue ? this.CreatedDate.ToString("yyyy-MM-dd ") : "") +
+                this.Text;
         }
     }
 
