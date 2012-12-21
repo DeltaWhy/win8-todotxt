@@ -45,7 +45,17 @@
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
         <Grid Grid.Row="1">
-            
+            <ListView x:Name="listView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox x:Name="Completed" IsChecked="{Binding Completed, Mode=TwoWay}" Click="Completed_Click"/>
+                            <TextBlock x:Name="TodoText" Text="{Binding Text}" Style="{Binding TextStyle, Mode=OneWay}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
         </Grid>
         <StackPanel x:Name="noFilePanel" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="{StaticResource NoFileMessage}" Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,15"/>

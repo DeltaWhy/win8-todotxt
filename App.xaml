@@ -15,7 +15,12 @@
                 <ResourceDictionary Source="Common/StandardStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <x:String x:Key="NoFileMessage">Create a new list or open an existing list.</x:String>
+            <Style x:Key="TodoTextStyle" TargetType="TextBlock">
 
+            </Style>
+            <Style x:Key="CompletedTodoTextStyle" TargetType="TextBlock">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

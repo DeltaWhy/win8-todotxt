@@ -26,7 +26,28 @@ namespace TodoTxt
     /// </summary>
     public sealed partial class MainPage : TodoTxt.Common.LayoutAwarePage
     {
+        /*public class StyleConverter : IValueConverter
+        {
+            public object Convert(object value, System.Type type, object parameter, string language)
+            {
+                if ((bool)value)
+                {
+                    return Application.Current.Resources["CompletedTodoTextStyle"];
+                }
+                else
+                {
+                    return Application.Current.Resources["TodoTextStyle"];
+                }
+            }
+
+            public object ConvertBack(object value, System.Type type, object parameter, string language)
+            {
+                throw new NotImplementedException(); //doing one-way binding so this is not required.
+            }
+        }*/
+
         private StorageFile file;
+        private IEnumerable<Todo> data;
 
         public MainPage()
         {
@@ -104,6 +125,9 @@ namespace TodoTxt
             {
                 ApplicationData.Current.LocalSettings.Values["MRUToken"] = Windows.Storage.AccessCache.StorageApplicationPermissions.MostRecentlyUsedList.Add(file);
                 this.file = file;
+                this.data = await TodoList.GetAsyncFromFile(file);
+                noFilePanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                listView.ItemsSource = this.data;
             }
             catch (Exception e)
             {
@@ -175,6 +199,11 @@ namespace TodoTxt
                 {
                 }
             }
+        }
+
+        private void Completed_Click(object sender, RoutedEventArgs e)
+        {
+            return;
         }
     }
 }
